@@ -1,0 +1,52 @@
+{{define "content"}}
+
+<h2>{{.Title}}</h2>
+
+<form action="{{if le .Contact.Id 0}}/contacts/new{{else}}/contacts/{{.Contact.Id}}/edit{{end}}" method="post">
+  <fieldset style="border-radius: 3px;">
+    <legend>Contact Values</legend>
+
+    <input type="hidden" name="Id" value="{{.Contact.Id}}">
+
+    <div class="newContactInputBox">
+      <div class="newContactInputLine">
+        <label for="First">First Name</label>
+        <input name="First" id="First" type="text" placeholder="First Name" value="{{.Contact.First}}">
+      </div>
+      <span class="error">{{.Errors.First}}</span>
+    </div>
+
+    <div class="newContactInputBox">
+      <div class="newContactInputLine">
+        <label for="Last">Last Name</label>
+        <input name="Last" id="Last" type="text" placeholder="Last Name" value="{{.Contact.Last}}">
+      </div>
+      <span class="error">{{.Errors.Last}}</span>
+    </div>
+
+    <div class="newContactInputBox">
+      <div class="newContactInputLine">
+        <label for="Email">Email</label>
+        <input name="Email" id="Email" type="email" placeholder="Email" value="{{.Contact.Email}}">
+      </div>
+      <span class="error">{{.Errors.Email}}</span>
+    </div>
+
+    <p style="margin: 0; text-align: center;">
+      <button type="submit" style="align-self: center; border-color: var(--success)">Save</button>
+    </p>
+
+  </fieldset>
+</form>
+
+{{if gt .Contact.Id 0}}
+<form action="/contacts/{{.Contact.Id}}/delete" method="get" style="margin-top: 1rem;">
+  <button type="submit" style="border-color: var(--error);">Delete Contact</button>
+</form>
+{{end}}
+
+<p>
+  <a href="/contacts">Back</a>
+</p>
+
+{{end}}

@@ -1,0 +1,43 @@
+{{define "content"}}
+<h2>Contact table</h2>
+
+<form id="contactSearchForm" action="/contacts" method="get">
+  <label for="search">Search Term</label>
+  <input id="search" type="search" name="q" value="{{.Query}}" />
+  <button type="submit">Search</button>
+</form>
+
+<div style="max-width: 100vw; overflow-x: auto;">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Email</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{range .Contacts}}
+      <tr>
+        <td>{{.First}}</td>
+        <td>{{.Last}}</td>
+        <td>{{.Email}}</td>
+        <td style="display: flex; gap: 0.6rem;">
+          <a href="/contacts/{{.Id}}/edit">Edit</a>
+          <a href="/contacts/{{.Id}}">View</a>
+        </td>
+      </tr>
+      {{else}}
+      <tr>
+        <td colspan="3">No contacts</td>
+      </tr>
+      {{end}}
+    </tbody>
+  </table>
+</div>
+
+<p>
+  <a href="/contacts/new">Add Contact</a>
+</p>
+{{end}}

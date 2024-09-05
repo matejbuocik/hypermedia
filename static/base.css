@@ -1,0 +1,128 @@
+html {
+  --fg: black;
+  --bg: white;
+  --bg-hl: rgb(216, 216, 216);
+  --link: rgb(0, 124, 124);
+  --success: green;
+  --error: rgb(255, 55, 55);
+
+  min-height: 100vh;
+  font-family: sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    --fg: lightgray;
+    --bg: black;
+    --bg-hl: rgb(41, 41, 41);
+    --link: rgb(0, 197, 197);
+    --success: rgb(0, 185, 0);
+    --error: rgb(255, 55, 55);
+  }
+}
+
+body {
+  color: var(--fg);
+  background-color: var(--bg);
+
+  min-height: 100vh;
+  margin: 0;
+
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+header,
+footer {
+  margin: 0;
+  text-align: center;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+}
+
+a {
+  color: var(--link);
+}
+
+.ghostlink {
+  text-decoration: none;
+  color: var(--fg);
+}
+
+input,
+button {
+  padding: 0.2rem 0.4rem;
+  border-radius: 5px;
+  color: var(--fg);
+  background-color: var(--bg);
+  border-color: var(--fg);
+  border: 2px solid var(--fg);
+}
+
+button {
+  padding: 0.2rem 0.7rem;
+}
+
+button:hover {
+  background-color: var(--bg-hl);
+  cursor: pointer;
+}
+
+td,
+th {
+  border: 0;
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  border-bottom: 1px solid var(--fg);
+}
+
+table {
+  border: 0;
+  border-collapse: collapse;
+  white-space: nowrap;
+}
+
+tr:hover {
+  background-color: var(--bg-hl);
+}
+
+#contactSearchForm {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.newContactInputBox {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+
+.newContactInputLine {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.error {
+  font-size: 85%;
+  color: var(--error);
+}
+
+@media screen and (min-width: 500px) {
+  #contactSearchForm {
+    display: block;
+  }
+}

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="/static/base.css">
+  <title>{{if .Title}}{{.Title}}{{else}}Contact App{{end}}</title>
+</head>
+
+<body>
+  <header>
+    <a href="/" class="ghostlink">
+      <h1>Contact App</h1>
+    </a>
+  </header>
+
+  <main>
+    {{block "content" .}} {{end}}
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Contact App - <a href="https://hypermedia.systems/">Hypermedia systems</a></p>
+  </footer>
+</body>
+
+</html>

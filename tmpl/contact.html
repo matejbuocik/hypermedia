@@ -1,0 +1,15 @@
+{{define "content"}}
+
+{{if .Contact}}
+<h2>{{.Contact.First}} {{.Contact.Last}}</h2>
+<div>Email: <a href="mailto:{{.Contact.Email}}">{{.Contact.Email}}</a></div>
+<p style="display: flex; gap: 1rem;">
+  <a href="/contacts/{{.Contact.Id}}/edit">Edit</a>
+  <a href="/contacts">Back</a>
+</p>
+
+{{else}}
+<h2>Contact not found</h2>
+{{end}}
+
+{{end}}

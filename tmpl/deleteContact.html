@@ -1,0 +1,10 @@
+{{define "content"}}
+
+<h2>Really Delete?</h2>
+<p>{{.Contact.First}} {{.Contact.Last}} &lt;{{.Contact.Email}}&gt;</p>
+<form action="/contacts/{{.Contact.Id}}/delete" method="post" style="display: flex; gap: 1rem;">
+  <button type="button"><a href="/contacts" class="ghostlink">No, go back</a></button>
+  <button style="border-color: var(--error);">Yes, really delete</button>
+</form>
+
+{{end}}
