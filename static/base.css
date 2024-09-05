@@ -61,7 +61,8 @@ button {
   color: var(--fg);
   background-color: var(--bg);
   border-color: var(--fg);
-  border: 2px solid var(--fg);
+  border: 0 solid var(--fg);
+  border-width: 1px 1px 5px 3px;
 }
 
 button {
@@ -99,7 +100,7 @@ tr:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.6rem;
 }
 
 .newContactInputBox {
@@ -123,6 +124,6 @@ tr:hover {
 
 @media screen and (min-width: 500px) {
   #contactSearchForm {
-    display: block;
+    flex-direction: row;
   }
 }
