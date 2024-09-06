@@ -9,7 +9,7 @@
   <title>{{if .Title}}{{.Title}}{{else}}Contact App{{end}}</title>
 </head>
 
-<body>
+<body hx-boost="true">
   <header>
     <a href="/" class="ghostlink">
       <h1>Contact App</h1>
@@ -21,7 +21,7 @@
   </main>
 
   <footer>
-    <p>&copy; 2024 Contact App - <a href="https://hypermedia.systems/">Hypermedia systems</a></p>
+    <p>&copy; 2024 Contact App - <a href="https://hypermedia.systems/" hx-boost="false">Hypermedia systems</a></p>
   </footer>
 </body>
 
