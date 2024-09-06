@@ -40,9 +40,10 @@
 </form>
 
 {{if gt .Contact.Id 0}}
-<form action="/contacts/{{.Contact.Id}}/delete" method="get" style="margin-top: 1rem;">
-  <button type="submit" style="border-color: var(--error);">Delete Contact</button>
-</form>
+<button hx-get="/contacts/{{.Contact.Id}}/delete" hx-target="body" hx-push-url="true"
+  style="margin-top: 1rem; border-color: var(--error);">
+  Delete Contact
+</button>
 {{end}}
 
 <p>

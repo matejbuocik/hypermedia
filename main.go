@@ -35,7 +35,7 @@ func main() {
 	http.HandleFunc("GET /contacts/{id}/edit", server.getEditContact)
 	http.HandleFunc("POST /contacts/{id}/edit", server.postEditContact)
 	http.HandleFunc("GET /contacts/{id}/delete", server.getDeleteContact)
-	http.HandleFunc("POST /contacts/{id}/delete", server.postDeleteContact)
+	http.HandleFunc("DELETE /contacts/{id}", server.deleteContact)
 	http.HandleFunc("GET /contacts/{id}", server.getContact)
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
@@ -185,7 +185,7 @@ func (s ContactServer) getDeleteContact(w http.ResponseWriter, r *http.Request) 
 	RenderTemplate(w, "deleteContact", data)
 }
 
-func (s ContactServer) postDeleteContact(w http.ResponseWriter, r *http.Request) {
+func (s ContactServer) deleteContact(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {
 		http.Error(w, "invalid id", http.StatusBadRequest)
@@ -193,7 +193,7 @@ func (s ContactServer) postDeleteContact(w http.ResponseWriter, r *http.Request)
 	}
 
 	s.contacts.Delete(id)
-	http.Redirect(w, r, "/contacts", http.StatusFound)
+	http.Redirect(w, r, "/contacts", http.StatusSeeOther)
 }
 
 func (s ContactServer) getContact(w http.ResponseWriter, r *http.Request) {

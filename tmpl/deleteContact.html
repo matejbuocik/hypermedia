@@ -2,9 +2,11 @@
 
 <h2>Really Delete?</h2>
 <p>{{.Contact.First}} {{.Contact.Last}} &lt;{{.Contact.Email}}&gt;</p>
-<form action="/contacts/{{.Contact.Id}}/delete" method="post" style="display: flex; gap: 1rem;">
-  <button type="button"><a href="/contacts" class="ghostlink">No, go back</a></button>
-  <button style="border-color: var(--error);">Yes, really delete</button>
-</form>
+<div style="display: flex; gap: 1rem;">
+  <button hx-get="/contacts/{{.Contact.Id}}/edit" hx-target="body" hx-push-url="true">No, go back</button>
+  <button hx-delete="/contacts/{{.Contact.Id}}" hx-target="body" hx-push-url="true" style="border-color: var(--error);">
+    Yes, really delete
+  </button>
+</div>
 
 {{end}}
