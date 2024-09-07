@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/mail"
+	"slices"
 	"strings"
 )
 
@@ -11,32 +12,6 @@ type Contact struct {
 	First string
 	Last  string
 	Email string
-}
-
-func (c *Contact) CheckForErrors() map[string]string {
-	errors := make(map[string]string)
-
-	c.First = strings.TrimSpace(c.First)
-	c.Last = strings.TrimSpace(c.Last)
-	c.Email = strings.TrimSpace(c.Email)
-
-	if c.First == "" {
-		errors["First"] = "First name cannot be empty."
-	}
-	if c.Last == "" {
-		errors["Last"] = "Last name cannot be empty."
-	}
-
-	if c.Email == "" {
-		errors["Email"] = "Email cannot be empty."
-	} else if _, err := mail.ParseAddress(c.Email); err != nil {
-		errors["Email"] = "Invalid email address."
-	}
-
-	if len(errors) != 0 {
-		return errors
-	}
-	return nil
 }
 
 type Contacts struct {
@@ -65,8 +40,36 @@ func (cs *Contacts) Search(q string) []*Contact {
 	return found
 }
 
+func (cs *Contacts) CheckForErrors(c *Contact) map[string]string {
+	errors := make(map[string]string)
+
+	c.First = strings.TrimSpace(c.First)
+	c.Last = strings.TrimSpace(c.Last)
+	c.Email = strings.TrimSpace(c.Email)
+
+	if c.First == "" {
+		errors["First"] = "First name cannot be empty."
+	}
+	if c.Last == "" {
+		errors["Last"] = "Last name cannot be empty."
+	}
+
+	if c.Email == "" {
+		errors["Email"] = "Email cannot be empty."
+	} else if _, err := mail.ParseAddress(c.Email); err != nil {
+		errors["Email"] = "Invalid email address."
+	} else if slices.ContainsFunc(cs.contacts, func(co *Contact) bool { return co.Email == c.Email && co.Id != c.Id }) {
+		errors["Email"] = "Contact with this email already exists."
+	}
+
+	if len(errors) != 0 {
+		return errors
+	}
+	return nil
+}
+
 func (cs *Contacts) Add(c *Contact) map[string]string {
-	errors := c.CheckForErrors()
+	errors := cs.CheckForErrors(c)
 	if errors != nil {
 		return errors
 	}
@@ -83,7 +86,7 @@ func (cs *Contacts) Add(c *Contact) map[string]string {
 }
 
 func (cs *Contacts) Edit(c *Contact) map[string]string {
-	errors := c.CheckForErrors()
+	errors := cs.CheckForErrors(c)
 	if errors != nil {
 		return errors
 	}

@@ -115,6 +115,7 @@ tr:hover {
   flex-direction: row;
   justify-content: flex-end;
   gap: 1rem;
+  margin-bottom: 0.2rem;
 }
 
 .error {
