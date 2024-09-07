@@ -40,6 +40,18 @@ func (cs *Contacts) Search(q string) []*Contact {
 	return found
 }
 
+func (cs *Contacts) CheckEmailForContact(id int, email string) (string, bool) {
+	email = strings.TrimSpace(email)
+	if email == "" {
+		return "Email cannot be empty.", false
+	} else if _, err := mail.ParseAddress(email); err != nil {
+		return "Invalid email address.", false
+	} else if slices.ContainsFunc(cs.contacts, func(co *Contact) bool { return co.Email == email && co.Id != id }) {
+		return "Contact with this email already exists.", false
+	}
+	return "", true
+}
+
 func (cs *Contacts) CheckForErrors(c *Contact) map[string]string {
 	errors := make(map[string]string)
 
@@ -53,18 +65,14 @@ func (cs *Contacts) CheckForErrors(c *Contact) map[string]string {
 	if c.Last == "" {
 		errors["Last"] = "Last name cannot be empty."
 	}
-
-	if c.Email == "" {
-		errors["Email"] = "Email cannot be empty."
-	} else if _, err := mail.ParseAddress(c.Email); err != nil {
-		errors["Email"] = "Invalid email address."
-	} else if slices.ContainsFunc(cs.contacts, func(co *Contact) bool { return co.Email == c.Email && co.Id != c.Id }) {
-		errors["Email"] = "Contact with this email already exists."
+	if err, ok := cs.CheckEmailForContact(c.Id, c.Email); !ok {
+		errors["Email"] = err
 	}
 
 	if len(errors) != 0 {
 		return errors
 	}
+
 	return nil
 }
 

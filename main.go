@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -36,6 +37,7 @@ func main() {
 	http.HandleFunc("POST /contacts/{id}/edit", server.postEditContact)
 	http.HandleFunc("DELETE /contacts/{id}", server.deleteContact)
 	http.HandleFunc("GET /contacts/{id}", server.getContact)
+	http.HandleFunc("GET /contacts/{id}/email", server.getContactEmail)
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
@@ -190,4 +192,21 @@ func (s ContactServer) getContact(w http.ResponseWriter, r *http.Request) {
 		Contact: contact,
 	}
 	RenderTemplate(w, "contact", data)
+}
+
+func (s ContactServer) getContactEmail(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.PathValue("id"))
+	if err != nil {
+		http.Error(w, "invalid id", http.StatusBadRequest)
+		return
+	}
+
+	email := r.URL.Query().Get("Email")
+
+	emailErr, ok := s.contacts.CheckEmailForContact(id, email)
+	if ok {
+		fmt.Fprint(w, "")
+	} else {
+		fmt.Fprint(w, emailErr)
+	}
 }

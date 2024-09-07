@@ -10,8 +10,18 @@
 
     <div class="newContactInputBox">
       <div class="newContactInputLine">
+        <label for="Email">Email</label>
+        <input name="Email" id="Email" type="email" placeholder="Email" value="{{.Contact.Email}}" required
+          hx-get="/contacts/{{.Contact.Id}}/email" hx-target="next .error"
+          hx-trigger="change, keyup delay:500ms changed">
+      </div>
+      <span class="error">{{.Errors.Email}}</span>
+    </div>
+
+    <div class="newContactInputBox">
+      <div class="newContactInputLine">
         <label for="First">First Name</label>
-        <input name="First" id="First" type="text" placeholder="First Name" value="{{.Contact.First}}">
+        <input name="First" id="First" type="text" placeholder="First Name" required value="{{.Contact.First}}">
       </div>
       <span class="error">{{.Errors.First}}</span>
     </div>
@@ -19,17 +29,9 @@
     <div class="newContactInputBox">
       <div class="newContactInputLine">
         <label for="Last">Last Name</label>
-        <input name="Last" id="Last" type="text" placeholder="Last Name" value="{{.Contact.Last}}">
+        <input name="Last" id="Last" type="text" placeholder="Last Name" required value="{{.Contact.Last}}">
       </div>
       <span class="error">{{.Errors.Last}}</span>
-    </div>
-
-    <div class="newContactInputBox">
-      <div class="newContactInputLine">
-        <label for="Email">Email</label>
-        <input name="Email" id="Email" type="email" placeholder="Email" value="{{.Contact.Email}}">
-      </div>
-      <span class="error">{{.Errors.Email}}</span>
     </div>
 
     <p style="margin: 0; text-align: center;">
