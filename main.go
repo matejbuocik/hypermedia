@@ -34,7 +34,6 @@ func main() {
 	http.HandleFunc("POST /contacts/new", server.postNewContact)
 	http.HandleFunc("GET /contacts/{id}/edit", server.getEditContact)
 	http.HandleFunc("POST /contacts/{id}/edit", server.postEditContact)
-	http.HandleFunc("GET /contacts/{id}/delete", server.getDeleteContact)
 	http.HandleFunc("DELETE /contacts/{id}", server.deleteContact)
 	http.HandleFunc("GET /contacts/{id}", server.getContact)
 
@@ -161,28 +160,6 @@ func (s ContactServer) postEditContact(w http.ResponseWriter, r *http.Request) {
 		Errors:  errors,
 	}
 	RenderTemplate(w, "newContact", data)
-}
-
-func (s ContactServer) getDeleteContact(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(r.PathValue("id"))
-	if err != nil {
-		http.Error(w, "invalid id", http.StatusBadRequest)
-		return
-	}
-
-	c, _ := s.contacts.Find(id)
-	if c == nil {
-		http.Redirect(w, r, "/contacts", 500)
-	}
-
-	data := struct {
-		Title   string
-		Contact *Contact
-	}{
-		Title:   "Delete contact",
-		Contact: c,
-	}
-	RenderTemplate(w, "deleteContact", data)
 }
 
 func (s ContactServer) deleteContact(w http.ResponseWriter, r *http.Request) {
