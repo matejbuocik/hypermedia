@@ -75,6 +75,8 @@ func (cs *Contacts) Add(c *Contact) map[string]string {
 	}
 
 	if len(cs.contacts) > 0 {
+		// Contacts are sorted by Id
+		// Ids are reused on deleting contacts!
 		c.Id = cs.contacts[len(cs.contacts)-1].Id + 1
 	} else {
 		c.Id = 1
@@ -101,27 +103,17 @@ func (cs *Contacts) Edit(c *Contact) map[string]string {
 }
 
 func (cs *Contacts) Find(id int) (*Contact, int) {
-	if id < 0 || len(cs.contacts) == 0 || cs.contacts[len(cs.contacts)-1].Id < id {
-		return nil, -1
+	index, found := slices.BinarySearchFunc(cs.contacts, id, func(c *Contact, id int) int {
+		return c.Id - id
+	})
+
+	if found {
+		return cs.contacts[index], index
 	}
 
-	var found *Contact = nil
-	index := -1
-	for i, contact := range cs.contacts {
-		if contact.Id == id {
-			found = contact
-			index = i
-			break
-		}
-	}
-	return found, index
+	return nil, -1
 }
 
 func (cs *Contacts) Delete(id int) {
-	contact, index := cs.Find(id)
-	if contact == nil {
-		return
-	}
-
-	cs.contacts = append(cs.contacts[:index], cs.contacts[index+1:]...)
+	cs.contacts = slices.DeleteFunc(cs.contacts, func(c *Contact) bool { return c.Id == id })
 }
