@@ -59,10 +59,12 @@ func (s ContactServer) getContacts(w http.ResponseWriter, r *http.Request) {
 		Title    string
 		Query    string
 		Contacts []*Contact
+		Page     int
 	}{
 		Title:    "Contacts",
 		Query:    q,
 		Contacts: contacts,
+		Page:     2,
 	}
 
 	RenderTemplate(w, "contacts", data)

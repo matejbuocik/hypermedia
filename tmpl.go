@@ -8,17 +8,28 @@ import (
 	"strings"
 )
 
-const tmplDir = "tmpl/"
-
 var tmpl = map[string]*template.Template{}
 
 func ParseTemplates() {
+	const tmplDir = "tmpl/"
+
 	entries, err := os.ReadDir(tmplDir)
 	if err != nil {
 		panic("error getting templates - " + err.Error())
 	}
+
+	funcMap := template.FuncMap{
+		"inc": func(i int) int {
+			return i + 1
+		},
+		"dec": func(i int) int {
+			return i - 1
+		},
+	}
+
 	for _, entry := range entries {
-		tmpl[strings.TrimSuffix(entry.Name(), ".html")] = template.Must(template.ParseFiles(tmplDir+"base.html", tmplDir+entry.Name()))
+		temp := template.Must(template.New("base.html").Funcs(funcMap).ParseFiles(tmplDir+"base.html", tmplDir+entry.Name()))
+		tmpl[strings.TrimSuffix(entry.Name(), ".html")] = temp
 	}
 }
 

@@ -1,5 +1,10 @@
 {{define "content"}}
-<h2>Contact table</h2>
+
+<h2 style="margin-bottom: 1rem;">Contact table</h2>
+
+<p style="margin-top: 0; margin-bottom: 1.5rem;">
+  <a href="/contacts/new">Add Contact</a>
+</p>
 
 <form id="contactSearchForm" action="/contacts" method="get">
   <label for="search">Search Term</label>
@@ -37,7 +42,14 @@
   </table>
 </div>
 
-<p>
-  <a href="/contacts/new">Add Contact</a>
-</p>
+<div style="margin-top: 1rem; display: flex; gap: 1rem;">
+  {{if gt .Page 1}}
+  <a href="/contacts?page={{ dec .Page }}">Previous</a>
+  {{end}}
+
+  {{if len .Contacts | eq 10}}
+  <a href="/contacts?page={{ inc .Page }}">Next</a>
+  {{end}}
+</div>
+
 {{end}}
