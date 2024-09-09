@@ -55,9 +55,9 @@ func (s ContactServer) getContacts(w http.ResponseWriter, r *http.Request) {
 
 	var contacts []*Contact
 	if q != "" {
-		contacts = s.contacts.Search(q)
+		contacts = s.contacts.Search(q, page)
 	} else {
-		contacts = s.contacts.All(page, 10)
+		contacts = s.contacts.All(page)
 	}
 
 	data := struct {

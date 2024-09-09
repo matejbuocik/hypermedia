@@ -44,11 +44,11 @@
 
 <div style="margin-top: 0.5rem; display: flex; gap: 1rem;">
   {{if gt .Page 1}}
-  <a href="/contacts?page={{ dec .Page }}">Previous</a>
+  <a href="/contacts?page={{ dec .Page }}&q={{.Query}}">Previous</a>
   {{end}}
 
   {{if len .Contacts | eq 10}}
-  <a href="/contacts?page={{ inc .Page }}">Next</a>
+  <a href="/contacts?page={{ inc .Page }}&q={{.Query}}">Next</a>
   {{end}}
 </div>
 
