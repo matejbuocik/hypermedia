@@ -46,13 +46,18 @@ func main() {
 }
 
 func (s ContactServer) getContacts(w http.ResponseWriter, r *http.Request) {
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil {
+		page = 1
+	}
+
 	q := r.URL.Query().Get("q")
 
 	var contacts []*Contact
 	if q != "" {
 		contacts = s.contacts.Search(q)
 	} else {
-		contacts = s.contacts.All()
+		contacts = s.contacts.All(page, 10)
 	}
 
 	data := struct {
@@ -64,7 +69,7 @@ func (s ContactServer) getContacts(w http.ResponseWriter, r *http.Request) {
 		Title:    "Contacts",
 		Query:    q,
 		Contacts: contacts,
-		Page:     2,
+		Page:     page,
 	}
 
 	RenderTemplate(w, "contacts", data)

@@ -22,12 +22,28 @@ func NewContacts() *Contacts {
 	return &Contacts{contacts: []*Contact{
 		{1, "Matej", "Buocik", "matej.buocik@gmail.com"},
 		{2, "Julia", "Rumanova", "julka@gmail.com"},
-		{3, "Random", "Kontakt", "random@kontakt.sk"},
+		{3, "Random1", "Kontakt", "random1@kontakt.sk"},
+		{4, "Random2", "Kontakt", "random2@kontakt.sk"},
+		{5, "Random3", "Kontakt", "random3@kontakt.sk"},
+		{6, "Random4", "Kontakt", "random4@kontakt.sk"},
+		{7, "Random5", "Kontakt", "random5@kontakt.sk"},
+		{8, "Random6", "Kontakt", "random6@kontakt.sk"},
+		{9, "Random7", "Kontakt", "random7@kontakt.sk"},
+		{10, "Random8", "Kontakt", "random8@kontakt.sk"},
+		{11, "Random9", "Kontakt", "random9@kontakt.sk"},
+		{12, "Random10", "Kontakt", "random10@kontakt.sk"},
 	}}
 }
 
-func (cs *Contacts) All() []*Contact {
-	return cs.contacts
+func (cs *Contacts) All(page int, pageSize int) []*Contact {
+	if page <= 0 {
+		return nil
+	}
+
+	start := min((page-1)*pageSize, len(cs.contacts))
+	end := min(page*pageSize, len(cs.contacts))
+
+	return cs.contacts[start:end]
 }
 
 func (cs *Contacts) Search(q string) []*Contact {
