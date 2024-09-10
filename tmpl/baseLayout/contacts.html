@@ -35,27 +35,18 @@
             hx-target="body">Delete</a>
         </td>
       </tr>
-      {{else}}
+      {{end}}
+
+      {{if len .Contacts | eq 10}}
       <tr>
-        <td colspan="3">No contacts</td>
+        <td colspan="4" style="text-align: center">
+          <a href="#" hx-target="closest tr" hx-swap="outerHTML" hx-select="tbody > tr"
+            hx-get="/contacts?page={{inc .Page}}&q={{.Query}}">Load More</a>
+        </td>
       </tr>
       {{end}}
     </tbody>
   </table>
-</div>
-
-{{if len .Contacts | lt 0}}
-<p style="margin: 0;">{{.Paging.Start}}-{{.Paging.End}} of {{.Paging.Total}}</p>
-{{end}}
-
-<div style="margin-top: 0.5rem; display: flex; gap: 1rem;">
-  {{if gt .Paging.Page 1}}
-  <a href="/contacts?page={{ dec .Paging.Page }}&q={{.Query}}">Previous</a>
-  {{end}}
-
-  {{if lt .Paging.End .Paging.Total}}
-  <a href="/contacts?page={{ inc .Paging.Page }}&q={{.Query}}">Next</a>
-  {{end}}
 </div>
 
 {{end}}

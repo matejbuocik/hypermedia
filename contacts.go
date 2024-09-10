@@ -46,11 +46,11 @@ func contactsPaging(c []*Contact, page int, pageSize int) []*Contact {
 	return c[start:end]
 }
 
-func (cs *Contacts) All(page int, pageSize int) ([]*Contact, int) {
-	return contactsPaging(cs.contacts, page, pageSize), len(cs.contacts)
+func (cs *Contacts) All(page int, pageSize int) []*Contact {
+	return contactsPaging(cs.contacts, page, pageSize)
 }
 
-func (cs *Contacts) Search(q string, page int, pageSize int) ([]*Contact, int) {
+func (cs *Contacts) Search(q string, page int, pageSize int) []*Contact {
 	found := []*Contact{}
 	for _, contact := range cs.contacts {
 		if strings.Contains(contact.First, q) || strings.Contains(contact.Last, q) || strings.Contains(contact.Email, q) {
@@ -58,7 +58,7 @@ func (cs *Contacts) Search(q string, page int, pageSize int) ([]*Contact, int) {
 		}
 	}
 
-	return contactsPaging(found, page, pageSize), len(found)
+	return contactsPaging(found, page, pageSize)
 }
 
 func (cs *Contacts) CheckEmailForContact(id int, email string) (string, bool) {

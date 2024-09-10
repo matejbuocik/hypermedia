@@ -54,36 +54,23 @@ func (s ContactServer) getContacts(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query().Get("q")
 
 	var contacts []*Contact
-	var total int
 	pageSize := 10
 	if q != "" {
-		contacts, total = s.contacts.Search(q, page, pageSize)
+		contacts = s.contacts.Search(q, page, pageSize)
 	} else {
-		contacts, total = s.contacts.All(page, pageSize)
-	}
-
-	type Paging struct {
-		Page  int
-		Start int
-		End   int
-		Total int
+		contacts = s.contacts.All(page, pageSize)
 	}
 
 	data := struct {
 		Title    string
 		Query    string
 		Contacts []*Contact
-		Paging   Paging
+		Page     int
 	}{
 		Title:    "Contacts",
 		Query:    q,
 		Contacts: contacts,
-		Paging: Paging{
-			Page:  page,
-			Start: (page-1)*pageSize + 1,
-			End:   min((page-1)*pageSize+pageSize, (page-1)*pageSize+len(contacts)),
-			Total: total,
-		},
+		Page:     page,
 	}
 
 	RenderTemplate(w, "contacts", data)
