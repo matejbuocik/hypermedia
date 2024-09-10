@@ -31,6 +31,8 @@
         <td style="display: flex; gap: 0.6rem;">
           <a href="/contacts/{{.Id}}/edit">Edit</a>
           <a href="/contacts/{{.Id}}">View</a>
+          <a href="#" hx-delete="/contacts/{{.Id}}" hx-confirm="Are you sure you want to delete this contact?"
+            hx-target="body">Delete</a>
         </td>
       </tr>
       {{else}}
