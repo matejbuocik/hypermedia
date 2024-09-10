@@ -73,7 +73,12 @@ func (s ContactServer) getContacts(w http.ResponseWriter, r *http.Request) {
 		Page:     page,
 	}
 
-	RenderTemplate(w, "contacts", data)
+	if r.Header.Get("HX-Trigger") == "search" {
+		// Coming from search, only render rows
+		RenderTemplate(w, "rows", data)
+	} else {
+		RenderTemplate(w, "contacts", data)
+	}
 }
 
 func (s ContactServer) getNewContact(w http.ResponseWriter, r *http.Request) {

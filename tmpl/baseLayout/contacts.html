@@ -6,10 +6,13 @@
   <a href="/contacts/new">Add Contact</a>
 </p>
 
-<form id="contactSearchForm" action="/contacts" method="get">
+<form id="contactSearchForm" action="/contacts" method="get" style="position: relative;">
   <input id="search" type="search" name="q" value="{{.Query}}" hx-get="/contacts"
-    hx-trigger="search, keyup delay:400ms changed" hx-target="body" hx-push-url="true" />
+    hx-trigger="search, keyup delay:400ms changed" hx-target="tbody" hx-push-url="true" hx-indicator="#spinner" />
+
   <button type="submit">Search</button>
+  <img style="position: absolute; right: -3rem; width: 2rem;" id="spinner" class="htmx-indicator"
+    src="/static/spinner.svg" alt="Request In Flight..." />
 </form>
 
 <div style="max-width: 100vw; overflow-x: auto;">
@@ -23,28 +26,7 @@
       </tr>
     </thead>
     <tbody>
-      {{range .Contacts}}
-      <tr>
-        <td>{{.First}}</td>
-        <td>{{.Last}}</td>
-        <td>{{.Email}}</td>
-        <td style="display: flex; gap: 0.6rem;">
-          <a href="/contacts/{{.Id}}/edit">Edit</a>
-          <a href="/contacts/{{.Id}}">View</a>
-          <a href="#" hx-delete="/contacts/{{.Id}}" hx-confirm="Are you sure you want to delete this contact?"
-            hx-target="body">Delete</a>
-        </td>
-      </tr>
-      {{end}}
-
-      {{if len .Contacts | eq 10}}
-      <tr>
-        <td colspan="4" style="text-align: center">
-          <a href="#" hx-target="closest tr" hx-swap="outerHTML" hx-select="tbody > tr"
-            hx-get="/contacts?page={{inc .Page}}&q={{.Query}}">Load More</a>
-        </td>
-      </tr>
-      {{end}}
+      {{block "rows" .}}{{end}}
     </tbody>
   </table>
 </div>

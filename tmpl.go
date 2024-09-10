@@ -29,10 +29,14 @@ func ParseTemplates() {
 
 	for _, entry := range baseLayoutEntries {
 		temp := template.Must(template.New("base.html").Funcs(funcMap).ParseFiles(
-			tmplDir+"base.html", tmplDir+"baseLayout/"+entry.Name(),
+			tmplDir+"base.html", tmplDir+"baseLayout/"+entry.Name(), tmplDir+"rows.html",
 		))
 		tmpl[strings.TrimSuffix(entry.Name(), ".html")] = temp
 	}
+
+	tmpl["rows"] = template.Must(template.New("rows.html").Funcs(funcMap).ParseFiles(
+		tmplDir + "rows.html",
+	))
 }
 
 func RenderTemplate(w http.ResponseWriter, templ string, data any) {
