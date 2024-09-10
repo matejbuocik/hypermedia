@@ -8,7 +8,8 @@
 
 <form id="contactSearchForm" action="/contacts" method="get">
   <label for="search">Search Term</label>
-  <input id="search" type="search" name="q" value="{{.Query}}" />
+  <input id="search" type="search" name="q" value="{{.Query}}" hx-get="/contacts"
+    hx-trigger="search, keyup delay:200ms changed" hx-target="body" hx-push-url="true" />
   <button type="submit">Search</button>
 </form>
 
