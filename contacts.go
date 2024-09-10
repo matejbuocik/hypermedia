@@ -35,40 +35,30 @@ func NewContacts() *Contacts {
 	}}
 }
 
-func (cs *Contacts) All(page int) []*Contact {
+func contactsPaging(c []*Contact, page int, pageSize int) []*Contact {
 	if page <= 0 {
 		return nil
 	}
 
-	pageSize := 10
-	start := min((page-1)*pageSize, len(cs.contacts))
-	end := min(page*pageSize, len(cs.contacts))
+	start := min((page-1)*pageSize, len(c))
+	end := min(page*pageSize, len(c))
 
-	return cs.contacts[start:end]
+	return c[start:end]
 }
 
-func (cs *Contacts) Search(q string, page int) []*Contact {
-	if page <= 0 {
-		return nil
-	}
+func (cs *Contacts) All(page int, pageSize int) ([]*Contact, int) {
+	return contactsPaging(cs.contacts, page, pageSize), len(cs.contacts)
+}
 
+func (cs *Contacts) Search(q string, page int, pageSize int) ([]*Contact, int) {
 	found := []*Contact{}
-	pageSize := 10
-	drop := min((page-1)*pageSize, len(cs.contacts))
-
 	for _, contact := range cs.contacts {
 		if strings.Contains(contact.First, q) || strings.Contains(contact.Last, q) || strings.Contains(contact.Email, q) {
-			if drop > 0 {
-				drop--
-			} else if len(found) < pageSize {
-				found = append(found, contact)
-			} else {
-				break
-			}
+			found = append(found, contact)
 		}
 	}
 
-	return found
+	return contactsPaging(found, page, pageSize), len(found)
 }
 
 func (cs *Contacts) CheckEmailForContact(id int, email string) (string, bool) {
