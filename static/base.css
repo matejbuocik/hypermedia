@@ -2,7 +2,7 @@ html {
   --fg: black;
   --bg: white;
   --bg-hl: rgb(216, 216, 216);
-  --link: rgb(0, 124, 124);
+  --link: rgb(112, 72, 255);
   --success: green;
   --error: rgb(255, 55, 55);
 
@@ -15,7 +15,7 @@ html {
     --fg: lightgray;
     --bg: black;
     --bg-hl: rgb(41, 41, 41);
-    --link: rgb(0, 197, 197);
+    --link: rgb(148, 155, 255);
     --success: rgb(0, 185, 0);
     --error: rgb(255, 55, 55);
   }
