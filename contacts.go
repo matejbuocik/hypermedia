@@ -8,30 +8,32 @@ import (
 )
 
 type Contact struct {
-	Id    int
-	First string
-	Last  string
-	Email string
+	Id      int
+	First   string
+	Last    string
+	Email   string
+	Deleted bool
 }
 
 type Contacts struct {
-	contacts []*Contact
+	contacts      []*Contact
+	deletePending int
 }
 
 func NewContacts() *Contacts {
 	return &Contacts{contacts: []*Contact{
-		{1, "Matej", "Buocik", "matej.buocik@gmail.com"},
-		{2, "Julia", "Rumanova", "julka@gmail.com"},
-		{3, "Random1", "Kontakt", "random1@kontakt.sk"},
-		{4, "Random2", "Kontakt", "random2@kontakt.sk"},
-		{5, "Random3", "Kontakt", "random3@kontakt.sk"},
-		{6, "Random4", "Kontakt", "random4@kontakt.sk"},
-		{7, "Random5", "Kontakt", "random5@kontakt.sk"},
-		{8, "Random6", "Kontakt", "random6@kontakt.sk"},
-		{9, "Random7", "Kontakt", "random7@kontakt.sk"},
-		{10, "Random8", "Kontakt", "random8@kontakt.sk"},
-		{11, "Random9", "Kontakt", "random9@kontakt.sk"},
-		{12, "Random10", "Kontakt", "random10@kontakt.sk"},
+		{Id: 1, First: "Matej", Last: "Buocik", Email: "matej.buocik@gmail.com"},
+		{Id: 2, First: "Julia", Last: "Rumanova", Email: "julka@gmail.com"},
+		{Id: 3, First: "Random1", Last: "Kontakt", Email: "random1@kontakt.sk"},
+		{Id: 4, First: "Random2", Last: "Kontakt", Email: "random2@kontakt.sk"},
+		{Id: 5, First: "Random3", Last: "Kontakt", Email: "random3@kontakt.sk"},
+		{Id: 6, First: "Random4", Last: "Kontakt", Email: "random4@kontakt.sk"},
+		{Id: 7, First: "Random5", Last: "Kontakt", Email: "random5@kontakt.sk"},
+		{Id: 8, First: "Random6", Last: "Kontakt", Email: "random6@kontakt.sk"},
+		{Id: 9, First: "Random7", Last: "Kontakt", Email: "random7@kontakt.sk"},
+		{Id: 10, First: "Random8", Last: "Kontakt", Email: "random8@kontakt.sk"},
+		{Id: 11, First: "Random9", Last: "Kontakt", Email: "random9@kontakt.sk"},
+		{Id: 12, First: "Random10", Last: "Kontakt", Email: "random10@kontakt.sk"},
 	}}
 }
 
@@ -143,6 +145,13 @@ func (cs *Contacts) Find(id int) (*Contact, int) {
 	return nil, -1
 }
 
-func (cs *Contacts) Delete(id int) {
-	cs.contacts = slices.DeleteFunc(cs.contacts, func(c *Contact) bool { return c.Id == id })
+func (cs *Contacts) SetDeleted(id int) {
+	_, i := cs.Find(id)
+	cs.contacts[i].Deleted = true
+	cs.deletePending++
+}
+
+func (cs *Contacts) DeletePending() {
+	cs.contacts = slices.DeleteFunc(cs.contacts, func(c *Contact) bool { return c.Deleted })
+	cs.deletePending = 0
 }

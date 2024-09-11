@@ -46,6 +46,10 @@ func main() {
 }
 
 func (s ContactServer) getContacts(w http.ResponseWriter, r *http.Request) {
+	if r.Header.Get("HX-Trigger") != "load" {
+		s.contacts.DeletePending()
+	}
+
 	page, err := strconv.Atoi(r.URL.Query().Get("page"))
 	if err != nil {
 		page = 1
@@ -183,7 +187,7 @@ func (s ContactServer) deleteContact(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.contacts.Delete(id)
+	s.contacts.SetDeleted(id)
 
 	if r.Header.Get("HX-Trigger") == "delete-btn" {
 		http.Redirect(w, r, "/contacts", http.StatusSeeOther)
