@@ -38,6 +38,7 @@ func main() {
 	http.HandleFunc("DELETE /contacts/{id}", server.deleteContact)
 	http.HandleFunc("GET /contacts/{id}", server.getContact)
 	http.HandleFunc("GET /contacts/{id}/email", server.getContactEmail)
+	http.HandleFunc("POST /contacts", server.deleteContacts) // This should be DELETE, but we need to send IDs in form body
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
@@ -228,4 +229,24 @@ func (s ContactServer) getContactEmail(w http.ResponseWriter, r *http.Request) {
 	} else {
 		fmt.Fprint(w, emailErr)
 	}
+}
+
+func (s ContactServer) deleteContacts(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
+	}
+
+	for _, val := range r.Form["selectedIDs"] {
+		id, err := strconv.Atoi(val)
+		if err != nil {
+			http.Error(w, "invalid id", http.StatusBadRequest)
+			return
+		}
+		s.contacts.SetDeleted(id)
+	}
+
+	s.contacts.DeletePending()
+	http.Redirect(w, r, "/contacts", http.StatusSeeOther)
 }
