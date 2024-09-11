@@ -73,8 +73,7 @@ func (s ContactServer) getContacts(w http.ResponseWriter, r *http.Request) {
 		Page:     page,
 	}
 
-	if r.Header.Get("HX-Trigger") == "search" {
-		// Coming from search, only render rows
+	if t := r.Header.Get("HX-Trigger"); t == "search" || t == "load" {
 		RenderTemplate(w, "rows", data)
 	} else {
 		RenderTemplate(w, "contacts", data)
@@ -185,7 +184,10 @@ func (s ContactServer) deleteContact(w http.ResponseWriter, r *http.Request) {
 	}
 
 	s.contacts.Delete(id)
-	http.Redirect(w, r, "/contacts", http.StatusSeeOther)
+
+	if r.Header.Get("HX-Trigger") == "delete-btn" {
+		http.Redirect(w, r, "/contacts", http.StatusSeeOther)
+	}
 }
 
 func (s ContactServer) getContact(w http.ResponseWriter, r *http.Request) {

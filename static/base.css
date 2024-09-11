@@ -95,6 +95,11 @@ tr:hover {
   background-color: var(--bg-hl);
 }
 
+tr.htmx-swapping {
+  opacity: 0;
+  transition: opacity 200ms ease-out;
+}
+
 #contactSearchForm {
   margin-bottom: 1rem;
   display: flex;

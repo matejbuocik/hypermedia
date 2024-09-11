@@ -9,7 +9,7 @@
     <a href="/contacts/{{.Id}}/edit">Edit</a>
     <a href="/contacts/{{.Id}}">View</a>
     <a href="#" hx-delete="/contacts/{{.Id}}" hx-confirm="Are you sure you want to delete this contact?"
-      hx-target="body">Delete</a>
+      hx-target="closest tr" hx-swap="outerHTML swap:200ms">Delete</a>
   </td>
 </tr>
 {{end}}
@@ -17,7 +17,7 @@
 {{if len .Contacts | eq 10}}
 <tr>
   <td colspan="4" style="text-align: center">
-    <a href="#" hx-target="closest tr" hx-swap="outerHTML" hx-select="tbody > tr"
+    <a id="load" href="#" hx-target="closest tr" hx-swap="outerHTML"
       hx-get="/contacts?page={{inc .Page}}&q={{.Query}}">Load More</a>
   </td>
 </tr>

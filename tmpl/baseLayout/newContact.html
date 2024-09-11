@@ -42,7 +42,7 @@
 </form>
 
 {{if gt .Contact.Id 0}}
-<button hx-delete="/contacts/{{.Contact.Id}}" hx-target="body" hx-push-url="true"
+<button id="delete-btn" hx-delete="/contacts/{{.Contact.Id}}" hx-target="body" hx-push-url="true"
   hx-confirm="Are you sure you want to delete this contact?" style="margin-top: 1rem; border-color: var(--error);">
   Delete Contact
 </button>
