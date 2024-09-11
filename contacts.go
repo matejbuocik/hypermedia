@@ -55,7 +55,9 @@ func (cs *Contacts) All(page int, pageSize int) []*Contact {
 func (cs *Contacts) Search(q string, page int, pageSize int) []*Contact {
 	found := []*Contact{}
 	for _, contact := range cs.contacts {
-		if strings.Contains(contact.First, q) || strings.Contains(contact.Last, q) || strings.Contains(contact.Email, q) {
+		if strings.Contains(strings.ToLower(contact.First), strings.ToLower(q)) ||
+			strings.Contains(strings.ToLower(contact.Last), strings.ToLower(q)) ||
+			strings.Contains(strings.ToLower(contact.Email), strings.ToLower(q)) {
 			found = append(found, contact)
 		}
 	}

@@ -29,9 +29,12 @@
       {{block "rows" .}}{{end}}
     </tbody>
   </table>
-  <a href="#" hx-post="/contacts" hx-confirm="Are you sure you want to delete these contacts?" hx-target="body">
-    Delete Selected Contacts
-  </a>
+
+  <p>
+    <a href="#" hx-post="/contacts" hx-confirm="Are you sure you want to delete these contacts?" hx-target="body">
+      Delete Selected Contacts
+    </a>
+  </p>
 </form>
 
 {{end}}
