@@ -35,15 +35,15 @@
     </div>
 
     <p style="margin: 0; text-align: center;">
-      <button type="submit" style="align-self: center; border-color: var(--success)">Save</button>
+      <button class="success-btn" type="submit" style="align-self: center;">Save</button>
     </p>
 
   </fieldset>
 </form>
 
 {{if gt .Contact.Id 0}}
-<button id="delete-btn" hx-delete="/contacts/{{.Contact.Id}}" hx-target="body" hx-push-url="true"
-  hx-confirm="Are you sure you want to delete this contact?" style="margin-top: 1rem; border-color: var(--error);">
+<button id="delete-btn" class="delete-btn" hx-delete="/contacts/{{.Contact.Id}}" hx-target="body" hx-push-url="true"
+  hx-confirm="Are you sure you want to delete this contact?" style="margin-top: 1rem;">
   Delete Contact
 </button>
 {{end}}

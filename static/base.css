@@ -60,9 +60,22 @@ button {
   border-radius: 5px;
   color: var(--fg);
   background-color: var(--bg);
-  border-color: var(--fg);
-  border: 0 solid var(--fg);
-  border-width: 1px 1px 5px 3px;
+  border: 1px solid var(--fg);
+  box-shadow: 2px 3px 0 var(--fg);
+}
+
+.delete-btn {
+  border-color: var(--error);
+  box-shadow: 2px 3px 0 var(--error);
+}
+
+.success-btn {
+  border-color: var(--success);
+  box-shadow: 2px 3px 0 var(--success);
+}
+
+input[type="checkbox"] {
+  box-shadow: none;
 }
 
 button {
