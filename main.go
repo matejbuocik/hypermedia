@@ -278,7 +278,6 @@ var upgrader = websocket.Upgrader{}
 func (s ContactServer) getContactsDownload(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		http.Error(w, "server error", http.StatusInternalServerError)
 		return
 	}
 	defer conn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(1011, "error"))
