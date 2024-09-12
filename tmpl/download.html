@@ -9,7 +9,7 @@
       if (window.ws) {
         return false;
       }
-      window.ws = new WebSocket("ws://localhost:8080/contacts/download");
+      window.ws = new WebSocket("ws://{{.Host}}/contacts/download");
       window.ws.onopen = () => {
         document.getElementById("download").innerHTML = progressBox;
       }

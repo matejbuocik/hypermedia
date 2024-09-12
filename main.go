@@ -63,8 +63,8 @@ func main() {
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-	log.Println("Listening on :8080...")
-	go func() { log.Fatal(http.ListenAndServe(":8080", nil)) }()
+	log.Println("Listening on :8081.")
+	go func() { log.Fatal(http.ListenAndServe(":8081", nil)) }()
 	<-done
 }
 
@@ -93,11 +93,13 @@ func (s ContactServer) getContacts(w http.ResponseWriter, r *http.Request) {
 		Query    string
 		Contacts []*Contact
 		Page     int
+		Host     string
 	}{
 		Title:    "Contacts",
 		Query:    q,
 		Contacts: contacts,
 		Page:     page,
+		Host:     r.Host,
 	}
 
 	if t := r.Header.Get("HX-Trigger"); t == "search" || t == "load" {

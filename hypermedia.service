@@ -1,0 +1,12 @@
+[Unit]
+Description=Hypermedia test app
+After=network.target
+
+[Service]
+Type=exec
+ExecStart=/home/matej/hypermedia/hypermedia
+Restart=always
+WorkingDirectory=/home/matej/hypermedia/
+
+[Install]
+WantedBy=multi-user.target
