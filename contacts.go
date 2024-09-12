@@ -48,11 +48,15 @@ func contactsPaging(c []*Contact, page int, pageSize int) []*Contact {
 	return c[start:end]
 }
 
-func (cs *Contacts) All(page int, pageSize int) []*Contact {
+func (cs *Contacts) All() []*Contact {
+	return cs.contacts
+}
+
+func (cs *Contacts) AllPaged(page int, pageSize int) []*Contact {
 	return contactsPaging(cs.contacts, page, pageSize)
 }
 
-func (cs *Contacts) Search(q string, page int, pageSize int) []*Contact {
+func (cs *Contacts) SearchPaged(q string, page int, pageSize int) []*Contact {
 	found := []*Contact{}
 	for _, contact := range cs.contacts {
 		if strings.Contains(strings.ToLower(contact.First), strings.ToLower(q)) ||

@@ -29,7 +29,7 @@ func ParseTemplates() {
 
 	for _, entry := range baseLayoutEntries {
 		temp := template.Must(template.New("base.html").Funcs(funcMap).ParseFiles(
-			tmplDir+"base.html", tmplDir+"baseLayout/"+entry.Name(), tmplDir+"rows.html",
+			tmplDir+"base.html", tmplDir+"baseLayout/"+entry.Name(), tmplDir+"rows.html", tmplDir+"download.html",
 		))
 		tmpl[strings.TrimSuffix(entry.Name(), ".html")] = temp
 	}

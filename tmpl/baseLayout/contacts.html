@@ -1,13 +1,10 @@
 {{define "content"}}
 
-<h2 style="margin-bottom: 1rem;">Contact table</h2>
-
-<p style="margin-top: 0; margin-bottom: 1.5rem;">
-  <a href="/contacts/new">Add Contact</a>
-</p>
+<button style="margin-top: 0; margin-bottom: 0.8rem;" hx-get="/contacts/new" hx-target="body" hx-push-url="true">Add Contact</button>
+{{block "download" .}}{{end}}
 
 <form id="contactSearchForm" action="/contacts" method="get" style="position: relative;">
-  <input id="search" type="search" name="q" value="{{.Query}}" hx-get="/contacts"
+  <input id="search" type="search" name="q" value="{{.Query}}" style="width: 22rem;" hx-get="/contacts"
     hx-trigger="search, keyup delay:400ms changed" hx-target="tbody" hx-push-url="true" hx-indicator="#spinner" />
   <button type="submit">Search</button>
   <img style="position: absolute; right: -3rem; width: 2rem;" id="spinner" class="htmx-indicator"

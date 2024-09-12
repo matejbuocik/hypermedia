@@ -1,13 +1,19 @@
 package main
 
 import (
+	"encoding/csv"
 	"fmt"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"strconv"
 	"syscall"
+	"time"
+
+	"github.com/google/uuid"
+	"github.com/gorilla/websocket"
 )
 
 type ContactServer struct {
@@ -16,16 +22,29 @@ type ContactServer struct {
 
 func main() {
 	// TODO postgres + (sqlc, sqlx)? + http/templates + htmx + alpineJS + flowbite?
-	sigs := make(chan os.Signal, 1)
-	signal.Notify(sigs, syscall.SIGHUP)
+	hupSigs := make(chan os.Signal, 1)
+	signal.Notify(hupSigs, syscall.SIGHUP)
 	go func() {
 		for {
-			<-sigs
+			<-hupSigs
 			log.Println("Reloading templates...")
 			ParseTemplates()
 		}
 	}()
 
+	done := make(chan bool, 1)
+	intSigs := make(chan os.Signal, 1)
+	signal.Notify(intSigs, syscall.SIGINT, syscall.SIGTERM)
+	go func() {
+		<-intSigs
+		log.Print("Stopping...")
+		// TODO Uncomment later: os.RemoveAll("exports")
+		done <- true
+	}()
+
+	if err := os.MkdirAll("exports", fs.FileMode(0777)); err != nil {
+		panic("Mkdir: " + err.Error())
+	}
 	ParseTemplates()
 	server := ContactServer{contacts: NewContacts()}
 
@@ -39,11 +58,14 @@ func main() {
 	http.HandleFunc("GET /contacts/{id}", server.getContact)
 	http.HandleFunc("GET /contacts/{id}/email", server.getContactEmail)
 	http.HandleFunc("POST /contacts", server.deleteContacts) // This should be DELETE, but we need to send IDs in form body
+	http.HandleFunc("GET /contacts/download", server.getContactsDownload)
+	http.HandleFunc("GET /contacts/file", server.getContactsFile)
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	log.Println("Listening on :8080...")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	go func() { log.Fatal(http.ListenAndServe(":8080", nil)) }()
+	<-done
 }
 
 func (s ContactServer) getContacts(w http.ResponseWriter, r *http.Request) {
@@ -61,9 +83,9 @@ func (s ContactServer) getContacts(w http.ResponseWriter, r *http.Request) {
 	var contacts []*Contact
 	pageSize := 10
 	if q != "" {
-		contacts = s.contacts.Search(q, page, pageSize)
+		contacts = s.contacts.SearchPaged(q, page, pageSize)
 	} else {
-		contacts = s.contacts.All(page, pageSize)
+		contacts = s.contacts.AllPaged(page, pageSize)
 	}
 
 	data := struct {
@@ -249,4 +271,65 @@ func (s ContactServer) deleteContacts(w http.ResponseWriter, r *http.Request) {
 
 	s.contacts.DeletePending()
 	http.Redirect(w, r, "/contacts", http.StatusSeeOther)
+}
+
+var upgrader = websocket.Upgrader{}
+
+func (s ContactServer) getContactsDownload(w http.ResponseWriter, r *http.Request) {
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		http.Error(w, "server error", http.StatusInternalServerError)
+		return
+	}
+	defer conn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(1011, "error"))
+
+	u, err := uuid.NewRandom()
+	if err != nil {
+		return
+	}
+	filename := "exports/" + u.String() + ".csv"
+	file, err := os.Create(filename)
+	if err != nil {
+		return
+	}
+	defer file.Close()
+
+	csvWriter := csv.NewWriter(file)
+	if err = csvWriter.Write([]string{"first_name", "last_name", "email"}); err != nil {
+		return
+	}
+	for _, c := range s.contacts.All() {
+		if err = csvWriter.Write([]string{c.First, c.Last, c.Email}); err != nil {
+			return
+		}
+	}
+	csvWriter.Flush()
+	if err := csvWriter.Error(); err != nil {
+		return
+	}
+
+	conn.WriteMessage(websocket.TextMessage, []byte("10"))
+	time.Sleep(time.Second)
+	conn.WriteMessage(websocket.TextMessage, []byte("80"))
+	time.Sleep(time.Second)
+	conn.WriteMessage(websocket.TextMessage, []byte("100"))
+
+	conn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(1000, u.String()))
+
+	// Remove the file after some time
+	time.Sleep(30 * time.Second)
+	os.RemoveAll(filename)
+}
+
+func (s ContactServer) getContactsFile(w http.ResponseWriter, r *http.Request) {
+	u := r.URL.Query().Get("uuid")
+	if err := uuid.Validate(u); err != nil {
+		http.Error(w, "Bad uuid", http.StatusBadRequest)
+		return
+	}
+
+	filename := "exports/" + u + ".csv"
+	w.Header().Set("Content-Disposition", "attachment; filename=contacts.csv")
+	http.ServeFile(w, r, filename)
+	os.Remove(filename)
 }
