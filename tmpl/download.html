@@ -1,59 +1,7 @@
 {{block "download" .}}
 
-<script>
-  window.ws = null;
-
-  // if to avoid redeclaring variables.
-  if (typeof onClickDownload === "undefined") {
-    onClickDownload = () => {
-      if (window.ws) {
-        return false;
-      }
-      window.ws = new WebSocket("ws://{{.Host}}/contacts/download");
-      window.ws.onopen = () => {
-        document.getElementById("download").innerHTML = progressBox;
-      }
-      window.ws.onmessage = (evt) => {
-        document.getElementById("progressBar").style.width = `${evt.data}%`;
-      }
-      window.ws.onclose = (evt) => {
-        window.ws = null;
-
-        if (evt.code !== 1000) {
-          document.getElementById("download").innerHTML = `<a href="/contacts">Error, please refresh.</a>`;
-          return;
-        }
-
-        window.location = `/contacts/file?uuid=${evt.reason}`;
-        document.getElementById("download").innerHTML = downloadButton;
-      }
-
-      return false;
-    }
-
-    downloadButton = `<button id="downloadButton" onclick="onClickDownload()">Download Contacts</button>`;
-    progressBox = `
-      <div role="progressbar" style="
-        width: 15rem;
-        height: 1.5rem;
-        background-color: var(--bg-hl);
-        border-radius: 5px;
-        box-shadow: inset 0 1px 2px var(--bg);"
-      >
-        <div id="progressBar" style="
-          width: 0%;
-          height: 100%;
-          background-color: var(--link);
-          border-radius: 5px;
-          box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
-          transition: width .6s ease;">
-        </div>
-      </div>`;
-  }
-</script>
-
-<div id="download" style="margin-bottom: 0.8rem;">
-  <button id="downloadButton" onclick="onClickDownload()">Download Contacts</button>
+<div data-download="{{.Host}}" style="margin-bottom: 0.8rem;">
+  <button onclick="onClickDownload()">Download Contacts</button>
 </div>
 
 {{end}}
