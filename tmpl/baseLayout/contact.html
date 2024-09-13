@@ -4,8 +4,8 @@
 <h2>{{.Contact.First}} {{.Contact.Last}}</h2>
 <div>Email: <a href="mailto:{{.Contact.Email}}">{{.Contact.Email}}</a></div>
 <p style="display: flex; gap: 1rem;">
-  <a href="/contacts/{{.Contact.Id}}/edit">Edit</a>
-  <a href="/contacts">Back</a>
+  <a href="/contacts/{{.Contact.Id}}/edit" _="on keydown[code is 'KeyE'] from body click() me">Edit</a>
+  <a href="/contacts" _="on keydown[code is 'Escape'] from body click() me">Back</a>
 </p>
 
 {{else}}
