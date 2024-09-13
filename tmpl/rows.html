@@ -2,9 +2,8 @@
 
 {{range .Contacts}}
 <tr>
-  <td onclick="const c = document.getElementById('select-{{.Id}}'); c.checked = !c.checked;">
-    <input type="checkbox" id="select-{{.Id}}" name="selectedIDs" value="{{.Id}}"
-      onClick="this.checked=!this.checked" />
+  <td x-data="{checked: false}" x-on:click="checked=!checked">
+    <input type="checkbox" id="select-{{.Id}}" name="selectedIDs" value="{{.Id}}" x-model="checked"/>
   </td>
   <td>{{.First}}</td>
   <td>{{.Last}}</td>
