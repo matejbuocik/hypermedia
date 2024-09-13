@@ -3,16 +3,25 @@
 {{range .Contacts}}
 <tr>
   <td onclick="const c = document.getElementById('select-{{.Id}}'); c.checked = !c.checked;">
-    <input type="checkbox" id="select-{{.Id}}" name="selectedIDs" value="{{.Id}}" onClick="this.checked=!this.checked" />
+    <input type="checkbox" id="select-{{.Id}}" name="selectedIDs" value="{{.Id}}"
+      onClick="this.checked=!this.checked" />
   </td>
   <td>{{.First}}</td>
   <td>{{.Last}}</td>
   <td>{{.Email}}</td>
-  <td style="display: flex; gap: 0.6rem;">
-    <a href="/contacts/{{.Id}}/edit">Edit</a>
-    <a href="/contacts/{{.Id}}">View</a>
-    <a href="#" hx-delete="/contacts/{{.Id}}" hx-confirm="Are you sure you want to delete this contact?"
-      hx-target="closest tr" hx-swap="outerHTML swap:200ms">Delete</a>
+  <td>
+    <div data-contact-menu style="display: flex; flex-direction: column; gap: 0.5rem; text-align: center;">
+      <a href="#" aria-haspopup="menu" aria-controls="contact-menu-{{.Id}}">Options</a>
+
+      <div role="menu" id="contact-menu-{{.Id}}"
+        style="margin: 0.5rem 0; display: none; flex-direction: column; gap: 0.5rem; align-items: center;">
+        <a role="menuitem" href="/contacts/{{.Id}}/edit">Edit</a>
+        <a role="menuitem" href="/contacts/{{.Id}}">View</a>
+        <a role="menuitem" href="#" hx-delete="/contacts/{{.Id}}"
+          hx-confirm="Are you sure you want to delete this contact?" hx-target="closest tr"
+          hx-swap="outerHTML swap:200ms">Delete</a>
+      </div>
+    </div>
   </td>
 </tr>
 {{end}}
