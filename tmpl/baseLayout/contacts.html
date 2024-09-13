@@ -5,8 +5,11 @@
 {{block "download" .}}{{end}}
 
 <form id="contactSearchForm" action="/contacts" method="get">
-  <input id="search" type="search" name="q" value="{{.Query}}" style="width: 22rem;" hx-get="/contacts"
-    hx-trigger="search, keyup delay:400ms changed" hx-target="tbody" hx-push-url="true" hx-indicator="#spinner" />
+  <input
+    id="search" type="search" name="q" value="{{.Query}}" style="width: 22rem;"
+    hx-get="/contacts" hx-trigger="search, keyup delay:400ms changed" hx-target="tbody" hx-push-url="true" hx-indicator="#spinner"
+    _="on keydown[code is 'KeyS'] from the window focus() me halt"
+  />
   <button type="submit">Search</button>
   <img style="position: absolute; right: -3rem; width: 2rem;" id="spinner" class="htmx-indicator"
     src="/static/spinner.svg" alt="Request In Flight..." />
