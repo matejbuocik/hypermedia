@@ -1,6 +1,7 @@
 {{define "content"}}
 
-<button style="margin-top: 0; margin-bottom: 0.8rem;" hx-get="/contacts/new" hx-target="body" hx-push-url="true">Add Contact</button>
+<button style="margin-top: 0; margin-bottom: 0.8rem;" hx-get="/contacts/new" hx-target="body" hx-push-url="true">Add
+  Contact</button>
 {{block "download" .}}{{end}}
 
 <form id="contactSearchForm" action="/contacts" method="get">
@@ -11,7 +12,20 @@
     src="/static/spinner.svg" alt="Request In Flight..." />
 </form>
 
-<form style="max-width: 100vw; overflow-x: auto;">
+<form x-data="{selected: []}" style="max-width: 100vw; overflow-x: auto;">
+  <template x-if="selected.length > 0">
+    <div style="margin-bottom: 0.5rem;">
+      <hr aria-orientation="vertical">
+      <slot x-text="selected.length"></slot> contact(s) selected
+      <button type="button" @click="selected = []" style="margin: 0 0.5rem;">Cancel</button>
+      <button type="button" class="delete-btn" @click="
+        confirm(`Delete ${selected.length} contacts?`) &&
+        htmx.ajax('POST', '/contacts', {source: $root, target: document.body})">
+        Delete
+      </button>
+    </div>
+  </template>
+
   <table>
     <thead>
       <tr>
@@ -26,12 +40,6 @@
       {{block "rows" .}}{{end}}
     </tbody>
   </table>
-
-  <p>
-    <a href="#" hx-post="/contacts" hx-confirm="Are you sure you want to delete these contacts?" hx-target="body">
-      Delete Selected Contacts
-    </a>
-  </p>
 </form>
 
 {{end}}

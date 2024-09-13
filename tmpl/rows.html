@@ -2,8 +2,8 @@
 
 {{range .Contacts}}
 <tr>
-  <td x-data="{checked: false}" x-on:click="checked=!checked">
-    <input type="checkbox" id="select-{{.Id}}" name="selectedIDs" value="{{.Id}}" x-model="checked"/>
+  <td @click.self="$refs.select{{.Id}}contact.click()">
+    <input x-ref="select{{.Id}}contact" name="selectedIDs" type="checkbox" value="{{.Id}}" x-model="selected" />
   </td>
   <td>{{.First}}</td>
   <td>{{.Last}}</td>
