@@ -11,7 +11,7 @@
     <div class="newContactInputBox">
       <div class="newContactInputLine">
         <label for="Email">Email</label>
-        <input name="Email" id="Email" type="email" placeholder="Email" value="{{.Contact.Email}}" required
+        <input name="Email" id="Email" type="email" placeholder="Email" value="{{.Contact.Email}}" required autofocus
           hx-get="/contacts/{{.Contact.Id}}/email" hx-target="next .error"
           hx-trigger="change, keyup delay:500ms changed">
       </div>
