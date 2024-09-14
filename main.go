@@ -21,7 +21,6 @@ type ContactServer struct {
 }
 
 func main() {
-	// TODO postgres + (sqlc, sqlx)? + http/templates + htmx + alpineJS + flowbite?
 	hupSigs := make(chan os.Signal, 1)
 	signal.Notify(hupSigs, syscall.SIGHUP)
 	go func() {
@@ -46,26 +45,32 @@ func main() {
 		panic("Mkdir: " + err.Error())
 	}
 	ParseTemplates()
-	server := ContactServer{contacts: NewContacts()}
+	contacts := NewContacts()
+	server := ContactServer{contacts}
+	jsonServer := JSONServer{contacts: contacts, prefix: "/api/v1/"}
 
-	http.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) { http.Redirect(w, r, "/contacts", http.StatusFound) })
-	http.HandleFunc("GET /contacts", server.getContacts)
-	http.HandleFunc("GET /contacts/new", server.getNewContact)
-	http.HandleFunc("POST /contacts/new", server.postNewContact)
-	http.HandleFunc("GET /contacts/{id}/edit", server.getEditContact)
-	http.HandleFunc("POST /contacts/{id}/edit", server.postEditContact)
-	http.HandleFunc("DELETE /contacts/{id}", server.deleteContact)
-	http.HandleFunc("GET /contacts/{id}", server.getContact)
-	http.HandleFunc("GET /contacts/{id}/email", server.getContactEmail)
-	http.HandleFunc("POST /contacts", server.deleteContacts) // This should be DELETE, but we need to send IDs in form body
-	http.HandleFunc("GET /contacts/download", server.getContactsDownload)
-	http.HandleFunc("GET /contacts/file", server.getContactsFile)
-
+	server.RegisterHandlers()
+	jsonServer.RegisterHandlers()
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	log.Println("Listening on :8081.")
 	go func() { log.Fatal(http.ListenAndServe(":8081", nil)) }()
 	<-done
+}
+
+func (s ContactServer) RegisterHandlers() {
+	http.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) { http.Redirect(w, r, "/contacts", http.StatusFound) })
+	http.HandleFunc("GET /contacts", s.getContacts)
+	http.HandleFunc("GET /contacts/new", s.getNewContact)
+	http.HandleFunc("POST /contacts/new", s.postNewContact)
+	http.HandleFunc("GET /contacts/{id}/edit", s.getEditContact)
+	http.HandleFunc("POST /contacts/{id}/edit", s.postEditContact)
+	http.HandleFunc("DELETE /contacts/{id}", s.deleteContact)
+	http.HandleFunc("GET /contacts/{id}", s.getContact)
+	http.HandleFunc("GET /contacts/{id}/email", s.getContactEmail)
+	http.HandleFunc("POST /contacts", s.deleteContacts) // This should be DELETE, but we need to send IDs in form body
+	http.HandleFunc("GET /contacts/download", s.getContactsDownload)
+	http.HandleFunc("GET /contacts/file", s.getContactsFile)
 }
 
 func (s ContactServer) getContacts(w http.ResponseWriter, r *http.Request) {
